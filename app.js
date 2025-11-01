@@ -15,13 +15,16 @@ import { connect } from "./config/db.js";
 // configuring the dotenv
 dotenv.config();
 
+// setting up the app
+const app = express();
+// setting up the cors
+app.use(cors(corsOptions));
+
 // max retries and max number of connections
 const MAX_RETRIES = 5;
 const MAX_CONNECTIONS = 15;
 const RETRY_DELAY = 2000; // in milliseconds
 
-// setting up the app
-const app = express();
 let serverInstance = null;
 let activeConnections = 0;
 
@@ -31,9 +34,6 @@ app.use(express.urlencoded({ extended: true, limit: "1gb" }));
 
 // connecting to the database
 connect();
-
-// setting up the cors
-app.use(cors(corsOptions));
 
 // middleware to track active connections\
 app.use((req, res, next) => {

@@ -2,7 +2,7 @@
 
 // setting up the cors options
 const corsOptions = {
-  origin: "*",
+  origin: "http://192.168.0.249:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
@@ -11,6 +11,7 @@ const corsOptions = {
     "Accept",
     "Origin",
   ],
+  credentials: true,
 };
 
 export default corsOptions;
