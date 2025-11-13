@@ -11,12 +11,29 @@ import loginRouter from "./routes/login/routes.js";
 import openAiRouter from "./routes/openAi/routes.js";
 import dashboardRouter from "./routes/dashboard/routes.js";
 import { connect } from "./config/db.js";
+import passport from "passport";
+import session from "express-session";
+import "./config/passport.js";
 
 // configuring the dotenv
 dotenv.config();
 
 // setting up the app
 const app = express();
+
+// setting up the express-session for passport
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// initializing passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // setting up the cors
 app.use(cors(corsOptions));
 
