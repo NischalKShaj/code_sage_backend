@@ -68,7 +68,10 @@ const loginController = {
         googleUser.email
       );
 
-      const refresh_token = googleUser.refreshToken;
+      const refresh_token = generateRefreshToken(
+        googleUser._id,
+        googleUser.email
+      );
 
       // for the redirect
       const redirectURL =
@@ -96,7 +99,10 @@ const loginController = {
         githubUser.email
       );
 
-      const refresh_token = githubUser.refreshToken;
+      const refresh_token = generateRefreshToken(
+        githubUser._id,
+        githubUser.email
+      );
 
       // for the redirect
       const redirectURL =

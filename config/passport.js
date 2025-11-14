@@ -15,13 +15,10 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3100/login/google/callback",
-      // passReqToCallback: true,
-      // // to ensure we get refreshToken from Google:
-      // accessType: "offline",
+      callbackURL: "http://localhost:4000/login/google/callback",
       prompt: "consent",
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (access_token, refresh_token, profile, done) => {
       try {
         if (!profile.emails || !profile.emails.length) {
           return done(new Error("No email found in Google profile"));
@@ -37,10 +34,6 @@ passport.use(
         const existingUser = await User.findOne({ email: googleUser.email });
 
         if (existingUser) {
-          if (refreshToken) {
-            existingUser.refreshToken = refreshToken;
-            await existingUser.save();
-          }
           // login
           return done(null, existingUser);
         }
@@ -52,7 +45,6 @@ passport.use(
           username: googleUser.name,
           email: googleUser.email,
           password: hashPassword,
-          refreshToken: refreshToken,
         });
 
         await newUser.save();
@@ -71,16 +63,16 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:3100/login/github/callback",
+      callbackURL: "http://localhost:4000/login/github/callback",
       scope: ["user:email"],
       prompt: "consent",
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (access_token, refresh_token, profile, done) => {
       try {
         const email =
           profile.emails && profile.emails.length > 0
             ? profile.emails[0].value
-            : null;
+            : `${profile.username}@gmail.com`;
 
         let existingUser = null;
 
@@ -90,10 +82,6 @@ passport.use(
         }
 
         if (existingUser) {
-          if (refreshToken) {
-            existingUser.refreshToken = refreshToken;
-            await existingUser.save();
-          }
           // login
           return done(null, existingUser);
         }
@@ -105,7 +93,6 @@ passport.use(
           username: profile.username,
           email: email,
           password: hashPassword,
-          refreshToken: refreshToken,
         });
 
         await newUser.save();
