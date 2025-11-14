@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import {
   generateAccessToken,
   generateRefreshToken,
-} from "../middleware/generateToken.js";
+} from "../utils/generateToken.js";
 
 const loginController = {
   loginUser: async (req, res) => {
