@@ -28,5 +28,18 @@ router.get(
   loginController.googleLogin
 );
 
+// router for github login and signup
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+// router for setting up the success route
+router.get(
+  "/github/callback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  loginController.gitHubLogin
+);
+
 // exporting the router
 export default router;

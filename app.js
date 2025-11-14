@@ -6,6 +6,7 @@ import { retryWait } from "./utils/retryWait.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import corsOptions from "./config/cors.js";
+import contactRouter from "./routes/contact/routes.js";
 import signupRouter from "./routes/signup/routes.js";
 import loginRouter from "./routes/login/routes.js";
 import openAiRouter from "./routes/openAi/routes.js";
@@ -72,6 +73,7 @@ app.use((req, res, next) => {
 });
 
 // setup the routes
+app.use("/contact", contactRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/login", loginRouter);
 app.use("/openai", openAiRouter);
@@ -82,8 +84,8 @@ const server = async () => {
   let retry = 1;
   while (retry <= MAX_RETRIES) {
     try {
-      serverInstance = app.listen(process.env.PORT || 3000, () => {
-        console.log(`Server is running on port ${process.env.PORT || 3000}`);
+      serverInstance = app.listen(process.env.PORT || 3100, () => {
+        console.log(`Server is running on port ${process.env.PORT || 3100}`);
       });
 
       // handling the run time errors
