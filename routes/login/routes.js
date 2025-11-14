@@ -16,7 +16,7 @@ router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
-    accessType: "offline",
+    // accessType: "offline",
     prompt: "consent",
   })
 );
@@ -24,20 +24,24 @@ router.get(
 // router for setting up the success route
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "http://localhost:3000/login",
+  }),
   loginController.googleLogin
 );
 
 // router for github login and signup
 router.get(
   "/github",
-  passport.authenticate("github", { scope: ["user:email"] })
+  passport.authenticate("github", { scope: ["user:email"], prompt: "consent" })
 );
 
 // router for setting up the success route
 router.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  passport.authenticate("github", {
+    failureRedirect: "http://localhost:3000/login",
+  }),
   loginController.gitHubLogin
 );
 

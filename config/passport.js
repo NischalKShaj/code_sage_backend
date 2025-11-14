@@ -15,10 +15,10 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/login/google/callback",
-      passReqToCallback: true,
-      // to ensure we get refreshToken from Google:
-      accessType: "offline",
+      callbackURL: "http://localhost:3100/login/google/callback",
+      // passReqToCallback: true,
+      // // to ensure we get refreshToken from Google:
+      // accessType: "offline",
       prompt: "consent",
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -71,8 +71,9 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/login/github/callback",
+      callbackURL: "http://localhost:3100/login/github/callback",
       scope: ["user:email"],
+      prompt: "consent",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
