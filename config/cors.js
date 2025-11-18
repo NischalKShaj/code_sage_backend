@@ -2,7 +2,11 @@
 
 // setting up the cors options
 const corsOptions = {
-  origin: ["http://192.168.0.249:3000", "http://192.168.2.47:3000"],
+  origin: [
+    "http://192.168.0.249:3000",
+    "http://192.168.2.47:3000",
+    "http://localhost:3000",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
