@@ -9,7 +9,7 @@ const aiController = {
   // function to run and get the response from the ai
   runAi: async (req, res) => {
     try {
-      const { language, service, prompt, code } = req.body;
+      const { language, service, prompt, code, userId } = req.body;
 
       if (!language || !service || !prompt) {
         return res
@@ -51,7 +51,7 @@ const aiController = {
       setImmediate(async () => {
         try {
           await historyModel.create({
-            user: req.userId,
+            user: userId,
             title: titleOutput,
             language,
             service,
