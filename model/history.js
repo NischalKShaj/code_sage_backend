@@ -35,8 +35,22 @@ const historySchema = new Schema(
       type: String,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
+);
+
+// if soft delete is enabled then remove after 30days
+historySchema.index(
+  { deletedAt: 1 },
+  { expireAfterSeconds: 30 * 24 * 60 * 60 }
 );
 
 // creating the index for the user

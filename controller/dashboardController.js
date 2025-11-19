@@ -16,7 +16,7 @@ const dashboardController = {
       }
 
       const user = await historyModel
-        .find({ user: id })
+        .find({ user: id, isDeleted: false })
         .sort({ createdAt: -1 });
 
       if (user.length === 0) {
@@ -55,7 +55,11 @@ const dashboardController = {
       }
 
       // deleting the history
-      const deleteHistory = await historyModel.findByIdAndDelete(id);
+      const deleteHistory = await historyModel.findByIdAndUpdate(
+        id,
+        { $set: { isDeleted: true, deletedAt: new Date() } },
+        { new: true }
+      );
 
       if (!deleteHistory) {
         return res
@@ -67,6 +71,31 @@ const dashboardController = {
     } catch (error) {
       console.error("error while deleting the chat history", error);
       res.status(500).json({ error: error.message });
+    }
+  },
+
+  // for getting the trash data
+  getTrash: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const trash = await trashModel
+        .find({ user: id })
+        .populate("history", "title")
+        .sort({ createdAt: -1 });
+      if (!trash || trash.length == 0) {
+        return res.status(200).json({ trash: [] });
+      }
+
+      const formatted = trash.map((item) => ({
+        id: item._id,
+        historyId: item.history._id,
+        title: item.history.title,
+      }));
+
+      return res.status(200).json({ trash: formatted });
+    } catch (error) {
+      console.error("error while fetching the trash", error);
     }
   },
 };

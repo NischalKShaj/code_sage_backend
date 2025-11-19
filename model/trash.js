@@ -20,6 +20,12 @@ const trashSchema = new Schema(
   { timestamps: true }
 );
 
+// creating the a ttl index
+trashSchema.index(
+  { createdAt: 1 },
+  { expireAfterSeconds: 30 * 24 * 60 * 60 } // 30 days
+);
+
 // creating the index for the user
 trashSchema.index({ user: 1, createdAt: -1 });
 
