@@ -2,6 +2,8 @@
 
 // importing the required modules
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 // generating the access token
 export const generateAccessToken = (userId, email) => {

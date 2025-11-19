@@ -69,7 +69,11 @@ const aiController = {
       console.log("testing save will work or not");
     } catch (error) {
       console.error("error from the model ai", error);
-      res.status(500).json({ error: error });
+      if (!res.headersSent) {
+        res
+          .status(500)
+          .json({ error: "AI service unavailable. Try again later." });
+      }
     }
   },
 };
