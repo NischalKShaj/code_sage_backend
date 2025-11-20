@@ -3,9 +3,36 @@
 // importing the required modules
 import { historyModel } from "../model/history.js";
 import { trashModel } from "../model/trash.js";
+import { user } from "../model/user.js";
 
 // controller
 const dashboardController = {
+  // for editing the user
+  editUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { username, email } = req.body;
+      if (!id) {
+        return res.status(400).json({ error: "user id is required" });
+      }
+
+      const updatedUser = await user.findByIdAndUpdate(
+        id,
+        { $set: { username, email } },
+        { new: true }
+      );
+
+      if (updatedUser.length == 0) {
+        return res.status(202).json({ error: "user not found and updated" });
+      }
+
+      return res.status(202).json({ message: "user updated successfully" });
+    } catch (error) {
+      console.error("error from the edit user", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
   // for getting the chat history for the user
   getChatHistory: async (req, res) => {
     try {

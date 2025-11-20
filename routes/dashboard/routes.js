@@ -16,5 +16,8 @@ router.delete("/history/:id/:userId", dashboardController.deleteChatHistory);
 // router for getting the trash data
 router.get("/trash/:id", dashboardController.getTrash);
 
+// router for editing the user profile
+router.post("/edit-profile/:id", dashboardController.editUser);
+
 // exporting the router
 export default router;
