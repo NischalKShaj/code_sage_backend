@@ -126,6 +126,72 @@ const dashboardController = {
       res.status(500).json({ error: error.message });
     }
   },
+
+  // for restoring the trash
+  restoreTrash: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).json({ message: "Id is required" });
+      }
+
+      const trash = await trashModel.findOne({ _id: id });
+
+      if (!trash) {
+        return res.status(202).json({ message: "Trash not found" });
+      }
+
+      const history = await historyModel.findByIdAndUpdate(
+        trash.history,
+        {
+          $set: { isDeleted: false },
+        },
+        { new: true }
+      );
+
+      if (!history) {
+        return res
+          .status(500)
+          .json({ message: "Error while restoring the history" });
+      }
+
+      await trashModel.findByIdAndDelete(id);
+
+      res.status(202).json({ message: "History restored successfully" });
+    } catch (error) {
+      console.error("error while restoring the trash", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  // for deleing permanently
+  deletePermanent: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).json({ message: "Id is required" });
+      }
+
+      const trash = await trashModel.findByIdAndDelete(id);
+
+      if (!trash) {
+        return res.status(202).json({ message: "Trash not found" });
+      }
+
+      const history = await historyModel.findByIdAndDelete(trash.history);
+
+      if (!history) {
+        return res.status(202).json({ message: "History not found" });
+      }
+
+      res.status(202).json({ message: "Trash deleted permanently" });
+    } catch (error) {
+      console.error("error while restoring the trash", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 export default dashboardController;
