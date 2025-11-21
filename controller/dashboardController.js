@@ -123,6 +123,7 @@ const dashboardController = {
       return res.status(200).json({ trash: formatted });
     } catch (error) {
       console.error("error while fetching the trash", error);
+      res.status(500).json({ error: error.message });
     }
   },
 };
