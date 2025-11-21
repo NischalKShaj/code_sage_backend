@@ -16,6 +16,9 @@ router.post("/edit-profile/:id", dashboardController.editUser);
 // router for getting the history for the specific user
 router.get("/history/:id", dashboardController.getChatHistory);
 
+// router for editing the title for the history
+router.put("/history/:id", dashboardController.editTitle);
+
 // router for deleting the history for the specific user
 router.delete("/history/:id/:userId", dashboardController.deleteChatHistory);
 

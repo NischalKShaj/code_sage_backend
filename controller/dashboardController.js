@@ -192,6 +192,34 @@ const dashboardController = {
       res.status(500).json({ error: error.message });
     }
   },
+
+  // for editing the title for the dashboard
+  editTitle: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title } = req.body;
+      console.log("title", title);
+
+      if (!id || !title) {
+        return res.status(400).json({ message: "Missing the required fields" });
+      }
+
+      const history = await historyModel.findByIdAndUpdate(
+        id,
+        { $set: { title } },
+        { new: true }
+      );
+
+      if (!history) {
+        return res.status(202).json({ message: "History not found" });
+      }
+
+      res.status(202).json({ message: "Title updated successfully" });
+    } catch (error) {
+      console.error("Error from the edit title", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 export default dashboardController;
