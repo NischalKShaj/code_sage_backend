@@ -3,6 +3,7 @@
 // importing the required modules
 import { model } from "../ai/gemini.js";
 import { historyModel } from "../model/history.js";
+import { PROMPT_TEMPLATE } from "../ai/prompt/promptTemplate.js";
 
 // creating the controller
 const aiController = {
@@ -17,39 +18,35 @@ const aiController = {
           .json({ message: "Please provide all the required fields" });
       }
 
-      const basePrompt = `
-          You are CodeSage an elite coding assistant
-          Task: ${service}
-          Language :${language}
-          Instructions: ${prompt}
+      const template = PROMPT_TEMPLATE[service];
 
-        ${code ? `User Code:\n${code}` : ""}
+      if (!template) {
+        return res.status(400).json({ message: "Invalid service" });
+      }
 
-        Return clean, formatted output.
-      `;
+      const finalPrompt = template({ language, code, prompt });
 
-      const result = await model.generateContent(basePrompt);
+      const result = await model.generateContent(finalPrompt);
 
       const output = result.response.text();
 
       res.status(200).json({ output });
 
-      const titlePrompt = `
+      // generate the title in async way
+      setImmediate(async () => {
+        try {
+          const titlePrompt = `
           Generate a concise and meaningful title (max 6 words)
           for this action:
 
-          Task: ${service}
-          Prompt: ${prompt}
-
-          No quotes, no trailing punctuation.
+          Mode: ${service}
+          User Intent: ${prompt}
+          No quotes., no trailing punctuation.
           `;
 
-      const title = await model.generateContent(titlePrompt);
+          const title = await model.generateContent(titlePrompt);
 
-      const titleOutput = title.response.text();
-
-      setImmediate(async () => {
-        try {
+          const titleOutput = title.response.text();
           await historyModel.create({
             user: userId,
             title: titleOutput,
@@ -59,14 +56,11 @@ const aiController = {
             code,
             output,
           });
-
           console.log("✔ History saved successfully");
-        } catch (err) {
+        } catch (error) {
           console.error("❌ Failed to save history:", err);
         }
       });
-
-      console.log("testing save will work or not");
     } catch (error) {
       console.error("error from the model ai", error);
       if (!res.headersSent) {
